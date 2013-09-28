@@ -85,17 +85,21 @@ mplayer (for the google TTS engine)
 	readList = []
 
 % eXtract the first posts batch
+
 	posts = X.get_shouts()
 
 % 1st run
+
 	updatesList = posts.split('\n')
 	lastDialog = updatesList[0]
 	updatesList.reverse()
 	updatesList = updatesList[1:]
 
 % feeds first posts batch to the TTS engine
+
 	H.feed_list(updatesList)
 
 
 % Keeps the script running recursively indefinetively
+
 	H.post_streamer(posts, lastDialog)
