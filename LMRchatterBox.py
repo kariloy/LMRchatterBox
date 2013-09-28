@@ -39,7 +39,11 @@ class TinSBextractor(object):
             if "shoutbox-add-form-form-token" in line:
                 token = line.split()[4].split("=")[1].strip("\"")
         return token
-        
+
+    def post(self, comment):
+        post_url = "http://letsmakerobots.com/"
+        params = {'nick':'T2', 'message':comment, 'ajax':'1', 'nextcolor':'1', 'op':'shout', 'form_token':self.token, 'form_id':'shoutbox_add_form'}
+        response = urllib2.urlopen(post_url, urllib.urlencode(params))
 
     def get_shouts(self):
         shout_url = "http://letsmakerobots.com/shoutbox/js/view"
@@ -220,6 +224,29 @@ class TextStringer(object):
         # ================================================== #    
 		# Insert processing for specific names at this point #
 		# ================================================== #
+
+        # parse out (replace) silly names -- specific cases
+        i67 = re.compile('^\s?(6677)(:.*)')
+        m = i67.findall(sentence)
+        if len(m) > 0:
+            sentence = 'Six' + m[0][1]
+            user = ('Six', )
+
+        kev = re.compile('^\s?(K120189)(:.*)')
+        m = kev.findall(sentence)
+        if len(m) > 0:
+            sentence = 'Kevin' + m[0][1]    
+            user = ('Kevin', )
+
+
+        # and -- generic name followed by numerals cases    
+        names = re.compile('^\s?(([a-zA-Z]+)([0-9]+))(:.*)')
+        m = names.findall(sentence)
+        if len(m) > 0:
+            #print m, m[0][1]
+            user = (m[0][1], )
+            sentence = m[0][1]+str(m[0][3])
+
 
 
         # substitute funky stuff like emoticons with spoken worded action
