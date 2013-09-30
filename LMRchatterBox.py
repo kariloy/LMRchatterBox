@@ -47,8 +47,13 @@ class TinSBextractor(object):
 
     def get_shouts(self):
         shout_url = "http://letsmakerobots.com/shoutbox/js/view"
-        response = urllib2.urlopen(shout_url)
-        out = response.read()
+        try:
+        	response = urllib2.urlopen(shout_url)
+        	out = response.read()
+        except:
+        	time.sleep(10)
+        	response = urllib2.urlopen(shout_url)
+        	out = response.read()
 
         # intervene at this point if you need/want a fancier (manual) parsing...
         # BeautifulSoup(out).findAll('span', { "class" : "shout" })
@@ -215,7 +220,7 @@ class TextStringer(object):
         """
 
         # gets the name of user currently "speaking"
-        upat = re.compile(r'^\s?(\w+):\s{1}.*')
+        upat = re.compile(r'^\s?(.+):\s{1}.*')
         m = upat.findall(sentence)
         if m > 0:
             user = (m[0], )
